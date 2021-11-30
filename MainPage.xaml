@@ -90,7 +90,14 @@
 
         <controls:DataGrid x:Name="citizen_dataGrid" Margin="646,174,0,132"
             AutoGenerateColumns="True"
-            ItemsSource="{x:Bind list_of_citizens}"/>
+            ItemsSource="{x:Bind gameEvents}" GridLinesVisibility="All" VerticalScrollBarVisibility="Visible" HorizontalScrollBarVisibility="Visible">
+            <controls:DataGrid.VerticalGridLinesBrush>
+                <SolidColorBrush Color="#66000000" Opacity="0.4"/>
+            </controls:DataGrid.VerticalGridLinesBrush>
+            <controls:DataGrid.HorizontalGridLinesBrush>
+                <SolidColorBrush Color="#66000000" Opacity="0.4"/>
+            </controls:DataGrid.HorizontalGridLinesBrush>
+        </controls:DataGrid>
 
         <StackPanel Margin="26,126,0,0">
             <TextBlock x:Name="Description_text_block" HorizontalAlignment="Left" Text="Scores: Keep around 50, 0 and 100 are bad " TextWrapping="Wrap" VerticalAlignment="Top" Width="272" Height="23" Foreground="Black"/>
@@ -118,6 +125,7 @@
         <Button x:Name="Speed100Button" Content="x100" Margin="371,48,0,0" VerticalAlignment="Top" Width="110" Click="Speed100Button_Click"/>
         <Button x:Name="PauseButton" Content="Pause" Margin="26,48,0,0" VerticalAlignment="Top" Width="110" Click="PauseButton_Click"/>
         <TextBlock x:Name="CitizenNumberTextBlock" HorizontalAlignment="Left" Margin="646,148,0,0" Text="Number of Citizens: " TextWrapping="Wrap" VerticalAlignment="Top" Width="351" Height="26"/>
+        <Button Content="RefreshTable" Margin="486,48,0,0" VerticalAlignment="Top" Width="143" Click="RefreshButton_Click"/>
         <!--
     <Popup x:Name="Nav_Pop" 
         IsOpen="False" 

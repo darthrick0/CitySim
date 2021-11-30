@@ -8,12 +8,5 @@ namespace CitySim
 {
     class EventDigestor
     {
-
-
-        private void EventParser()
-        {
-            //import json file
-        }
-
     }
 }

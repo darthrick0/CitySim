@@ -125,6 +125,7 @@
       <DependentUpon>EventPopup.xaml</DependentUpon>
     </Compile>
     <Compile Include="FoodEvent.cs" />
+    <Compile Include="GameEvent.cs" />
     <Compile Include="GeneralClasses.cs" />
     <Compile Include="HealthEvent.cs" />
     <Compile Include="IndustryEvent.cs" />
@@ -174,6 +175,9 @@
     </PackageReference>
     <PackageReference Include="Microsoft.Toolkit.Uwp.UI.Controls.DataGrid">
       <Version>7.1.1</Version>
+    </PackageReference>
+    <PackageReference Include="Newtonsoft.Json">
+      <Version>13.0.1</Version>
     </PackageReference>
   </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">

@@ -8,6 +8,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
+using Windows.Storage;
 using Windows.UI.Core;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -19,6 +20,9 @@ using Windows.UI.Xaml.Navigation;
 using Windows.UI.Popups;
 using Windows.UI.WindowManagement;
 using Windows.UI.Xaml.Hosting;
+using Newtonsoft.Json;
+using System.Text.RegularExpressions;
+using System.Diagnostics;
 
 // The Blank Page item template is documented at https://go.microsoft.com/fwlink/?LinkId=402352&clcid=0x409
 
@@ -44,6 +48,7 @@ namespace CitySim
         static System.Timers.Timer myTimer;
         List<Citizen> list_of_citizens = new List<Citizen>();
         List<Citizen> backlog_of_citizens = new List<Citizen>();
+        public List<GameEvent> gameEvents = new List<GameEvent>();
         int number_of_citizens = 0;
         int timeCounter = 0;
 
@@ -61,6 +66,9 @@ namespace CitySim
         {
             this.InitializeComponent();
 
+            ImportJson();
+            Refresh_Table();
+
             myTimer = new System.Timers.Timer();
             myTimer.Interval = timerIntervalMilli;
             myTimer.Elapsed += OnTimedEvent;
@@ -68,6 +76,15 @@ namespace CitySim
 
             currentMonth = date.Month;
             currentYear = date.Year;
+        }
+
+        public async void ImportJson()
+        {
+            Debug.WriteLine("Import Json Started");
+            gameEvents = await LoadFromJsonAsync();
+            Debug.WriteLine("LoadFromJson ended");
+            Debug.WriteLine("number of events in json: " + gameEvents.Count());
+            Debug.WriteLine("Import Json ended");
         }
 
         private async void OnTimedEvent(Object source, System.Timers.ElapsedEventArgs e)
@@ -168,8 +185,9 @@ namespace CitySim
 
         private void Refresh_Table()
         {
+            Debug.WriteLine("Made it to refresh table");
             citizen_dataGrid.ItemsSource = null;
-            citizen_dataGrid.ItemsSource = list_of_citizens;
+            citizen_dataGrid.ItemsSource = gameEvents;
         }
 
         private void PauseButton_Click(object sender, RoutedEventArgs e)
@@ -195,5 +213,41 @@ namespace CitySim
             myTimer.Interval = 10;
         }
 
+        public static async Task<List<GameEvent>> LoadFromJsonAsync()
+        {
+            Debug.WriteLine("made it to loadfromjson");
+            string JsonFile = "EventTableOrTest.json";
+            string jsonContentsAll = await DeserializeFileAsync(JsonFile);
+            if (jsonContentsAll != null)
+            {
+                List<GameEvent> stuff = JsonConvert.DeserializeObject<List<GameEvent>>(jsonContentsAll);
+                return stuff;
+            }
+            return null;
+        }
+
+        private static async Task<string> DeserializeFileAsync(string fileName)
+        {
+            Debug.WriteLine("made it to deserializefile");
+            try
+            {
+                string path = Windows.ApplicationModel.Package.Current.InstalledLocation.Path;
+                Debug.WriteLine(path);
+                StorageFolder folder = await StorageFolder.GetFolderFromPathAsync(path);
+                Debug.WriteLine(folder.Path);
+                StorageFile localFile = await folder.GetFileAsync(fileName);
+                Debug.WriteLine(localFile);
+                return await FileIO.ReadTextAsync(localFile);
+            }
+            catch (FileNotFoundException)
+            {
+                return null;
+            }
+        }
+
+        private void RefreshButton_Click(object sender, RoutedEventArgs e)
+        {
+            Refresh_Table();
+        }
     }
 }
